@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: product-service
+  profiles:
+    active: localhost
+  main:
+    allow-bean-definition-overriding: true
+info:
+  component: Product Service
+
+---
+spring:
+  profiles: localhost
+  cloud:
+    config:
+      url: http://localhost:8888
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDailect
+
