@@ -3,12 +3,13 @@ package com.mta.stockmanagement.productservice.repository.entity;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+//import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.*;
 
 @Data
 @Builder
@@ -18,9 +19,9 @@ import java.util.Date;
 @Table(name = "product", schema = "stock_management")
 public class Product {
     @Id
-    @Column(name = "_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
+    private Long id;
 
     @Column(name = "name")
     private String name;
@@ -53,7 +54,7 @@ public class Product {
 /*
 public record Product(
         @Id
-        @Column(name = "_id")
+        @Column(name = "id")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         long ID,
         @Column(name = "name")

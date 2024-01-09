@@ -9,27 +9,27 @@ spring:
 info:
   component: Product Service
 
-logging:
-  level:
-    root: INFO
-    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
-
 server:
   port: 9788
+logging:
+  level:
+    root: off
+    com.mta: DEBUG
 
 ---
 spring:
-  config:
-    activate:
-      on-profile: localhost
+  profiles:
+    active: localhost
   cloud:
     config:
       url: http://localhost:8888
   jpa:
     hibernate:
       ddl-auto: update
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: "jdbc:postgresql://localhost:5432/stock_management"
+    url: jdbc:postgresql://localhost:5432/stock_management
     username: postgres
     password: root

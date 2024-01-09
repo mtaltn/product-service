@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ProductUpdateRequest {
-    private Long ID;
+    private Long id;
     private String name;
     private Integer quantity;
     private Double price;
