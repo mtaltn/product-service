@@ -2,6 +2,7 @@ package com.mta.stockmanagement.productservice.service.impl;
 
 import com.mta.stockmanagement.productservice.enums.Language;
 import com.mta.stockmanagement.productservice.exception.enums.FriendlyMessageCodes;
+import com.mta.stockmanagement.productservice.exception.exceptions.ProductAlreadyDeletedException;
 import com.mta.stockmanagement.productservice.exception.exceptions.ProductNotCreatedException;
 import com.mta.stockmanagement.productservice.exception.exceptions.ProductNotFoundException;
 import com.mta.stockmanagement.productservice.repository.ProductRepository;
@@ -22,7 +23,7 @@ public class ProductRepositoryServiceImpl implements IProductRepositoryService {
     private final ProductRepository productRepository;
     @Override
     public Product create(Language language, ProductCreateRequest productCreateRequest) {
-        log.debug("[{}][create] -> request: {}",this.getClass().getSimpleName(),productCreateRequest);
+        log.debug("[{}][create] -> request: {}",this.getClass().getSimpleName(), productCreateRequest);
         try {
             Product product = Product.builder()
                     .name(productCreateRequest.getName())
@@ -31,7 +32,7 @@ public class ProductRepositoryServiceImpl implements IProductRepositoryService {
                     .deleted(false)
                     .build();
             Product productResponse = productRepository.saveAndFlush(product);
-            log.debug("[{}][create] -> response: {}",this.getClass().getSimpleName(),productResponse);
+            log.debug("[{}][create] -> response: {}",this.getClass().getSimpleName(), productResponse);
             return productResponse;
         }catch (Exception exception){
             throw new ProductNotCreatedException(language,
@@ -42,27 +43,53 @@ public class ProductRepositoryServiceImpl implements IProductRepositoryService {
 
     @Override
     public Product getByID(Language language, Long id) {
-        log.debug("[{}][getByID] -> request id: {}",this.getClass().getSimpleName(),id);
+        log.debug("[{}][getByID] -> request id: {}",this.getClass().getSimpleName(), id);
         Product product = productRepository.getByIdAndDeletedFalse(id);
         if (Objects.isNull(product)){
             throw new ProductNotFoundException(language,FriendlyMessageCodes.PRODUCT_NOT_FOUND_EXCEPTION, "Product not found for id:"+id);
         }
-        log.debug("[{}][getByID] -> response id: {}",this.getClass().getSimpleName(),product);
+        log.debug("[{}][getByID] -> response id: {}",this.getClass().getSimpleName(), product);
         return product;
     }
 
     @Override
     public List<Product> getAll(Language language) {
-        return null;
+        log.debug("[{}][getAll]",this.getClass().getSimpleName());
+        List<Product> products = productRepository.getAllByDeletedFalse();
+        if(products.isEmpty()){
+            throw new ProductNotFoundException(language,FriendlyMessageCodes.PRODUCT_NOT_FOUND_EXCEPTION,"Product not found");
+        }
+        log.debug("[{}][getAll] -> response: {}",this.getClass().getSimpleName(), products);
+        return products;
     }
 
     @Override
     public Product update(Language language, Long id, ProductUpdateRequest productUpdateRequest) {
-        return null;
+        log.debug("[{}][update] -> request: {}",this.getClass().getSimpleName(), productUpdateRequest);
+        Product product = getByID(language,id);
+        product.setName(productUpdateRequest.getName());
+        product.setQuantity(productUpdateRequest.getQuantity());
+        product.setPrice(productUpdateRequest.getPrice());
+        product.setCreatedDate(product.getCreatedDate());
+        product.setUpdatedDate(new Date());
+        Product productResponse = productRepository.saveAndFlush(product);
+        log.debug("[{}][update] -> response: {}",this.getClass().getSimpleName(), productResponse);
+        return productResponse;
     }
 
     @Override
     public Product delete(Language language, Long id) {
-        return null;
+        log.debug("[{}][delete] -> request id: {}",this.getClass().getSimpleName(), id);
+        Product product;
+        try{
+            product = getByID(language,id);
+            product.setDeleted(true);
+            product.setUpdatedDate(new Date());
+            Product productResponse = productRepository.saveAndFlush(product);
+            log.debug("[{}][delete] -> response: {}",this.getClass().getSimpleName(), productResponse);
+            return productResponse;
+        }catch (ProductNotFoundException productNotFoundException){
+            throw new ProductAlreadyDeletedException(language,FriendlyMessageCodes.PRODUCT_ALREADY_DELETED,"Product already deleted id : "+ id);
+        }
     }
 }
