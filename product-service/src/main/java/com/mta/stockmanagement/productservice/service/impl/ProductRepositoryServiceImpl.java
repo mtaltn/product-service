@@ -42,13 +42,13 @@ public class ProductRepositoryServiceImpl implements IProductRepositoryService {
     }
 
     @Override
-    public Product getByID(Language language, Long id) {
-        log.debug("[{}][getByID] -> request id: {}",this.getClass().getSimpleName(), id);
+    public Product getById(Language language, Long id) {
+        log.debug("[{}][getById] -> request id: {}",this.getClass().getSimpleName(), id);
         Product product = productRepository.getByIdAndDeletedFalse(id);
         if (Objects.isNull(product)){
             throw new ProductNotFoundException(language,FriendlyMessageCodes.PRODUCT_NOT_FOUND_EXCEPTION, "Product not found for id:"+id);
         }
-        log.debug("[{}][getByID] -> response id: {}",this.getClass().getSimpleName(), product);
+        log.debug("[{}][getById] -> response id: {}",this.getClass().getSimpleName(), product);
         return product;
     }
 
@@ -66,7 +66,7 @@ public class ProductRepositoryServiceImpl implements IProductRepositoryService {
     @Override
     public Product update(Language language, Long id, ProductUpdateRequest productUpdateRequest) {
         log.debug("[{}][update] -> request: {}",this.getClass().getSimpleName(), productUpdateRequest);
-        Product product = getByID(language,id);
+        Product product = getById(language,id);
         product.setName(productUpdateRequest.getName());
         product.setQuantity(productUpdateRequest.getQuantity());
         product.setPrice(productUpdateRequest.getPrice());
@@ -82,7 +82,7 @@ public class ProductRepositoryServiceImpl implements IProductRepositoryService {
         log.debug("[{}][delete] -> request id: {}",this.getClass().getSimpleName(), id);
         Product product;
         try{
-            product = getByID(language,id);
+            product = getById(language,id);
             product.setDeleted(true);
             product.setUpdatedDate(new Date());
             Product productResponse = productRepository.saveAndFlush(product);

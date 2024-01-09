@@ -47,12 +47,12 @@ public class ProductController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/{language}/get/{id}")
-    public InternalApiResponse<ProductResponse> getByID(@PathVariable("language") Language language,
+    public InternalApiResponse<ProductResponse> getbyid(@PathVariable("language") Language language,
                                                         @PathVariable("id") Long id){
-        log.debug("[{}][getByID] -> request id: {}",this.getClass().getSimpleName(),id);
-        Product product = productRepositoryService.getByID(language,id);
+        log.debug("[{}][getById] -> request id: {}",this.getClass().getSimpleName(),id);
+        Product product = productRepositoryService.getById(language,id);
         ProductResponse productResponse = convertProductResponse(product);
-        log.debug("[{}][getByID] -> response: {}",this.getClass().getSimpleName(),productResponse);
+        log.debug("[{}][getById] -> response: {}",this.getClass().getSimpleName(),productResponse);
         return InternalApiResponse.<ProductResponse>builder()
                 .httpStatus(HttpStatus.OK)
                 .hasError(false)
