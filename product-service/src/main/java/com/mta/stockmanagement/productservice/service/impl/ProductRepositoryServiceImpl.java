@@ -9,12 +9,14 @@ import com.mta.stockmanagement.productservice.repository.ProductRepository;
 import com.mta.stockmanagement.productservice.repository.entity.Product;
 import com.mta.stockmanagement.productservice.request.ProductCreateRequest;
 import com.mta.stockmanagement.productservice.request.ProductUpdateRequest;
+import com.mta.stockmanagement.productservice.response.ProductResponse;
 import com.mta.stockmanagement.productservice.service.IProductRepositoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -91,5 +93,31 @@ public class ProductRepositoryServiceImpl implements IProductRepositoryService {
         }catch (ProductNotFoundException productNotFoundException){
             throw new ProductAlreadyDeletedException(language,FriendlyMessageCodes.PRODUCT_ALREADY_DELETED,"Product already deleted id : "+ id);
         }
+    }
+
+    @Override
+    public List<ProductResponse> convertProductResponseList(List<Product> productList){
+        return productList.stream()
+                .map(arg -> ProductResponse.builder()
+                        .id(arg.getId())
+                        .name(arg.getName())
+                        .quantity(arg.getQuantity())
+                        .price(arg.getPrice())
+                        .createdDate(arg.getCreatedDate().getTime())
+                        .updatedDate(arg.getUpdatedDate().getTime())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductResponse convertProductResponse(Product product) {
+        return ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .quantity(product.getQuantity())
+                .price(product.getPrice())
+                .createdDate(product.getCreatedDate().getTime())
+                .updatedDate(product.getUpdatedDate().getTime())
+                .build();
     }
 }
