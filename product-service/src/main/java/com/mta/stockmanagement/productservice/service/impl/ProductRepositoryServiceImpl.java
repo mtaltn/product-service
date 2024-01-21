@@ -31,6 +31,8 @@ public class ProductRepositoryServiceImpl implements IProductRepositoryService {
                     .name(productCreateRequest.getName())
                     .quantity(productCreateRequest.getQuantity())
                     .price(productCreateRequest.getPrice())
+                    .createdDate(new Date())
+                    .updatedDate(new Date())
                     .deleted(false)
                     .build();
             Product productResponse = productRepository.saveAndFlush(product);

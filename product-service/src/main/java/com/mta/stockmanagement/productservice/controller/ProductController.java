@@ -10,14 +10,13 @@ import com.mta.stockmanagement.productservice.response.FriendlyMessage;
 import com.mta.stockmanagement.productservice.response.InternalApiResponse;
 import com.mta.stockmanagement.productservice.response.ProductResponse;
 import com.mta.stockmanagement.productservice.service.IProductRepositoryService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -79,7 +78,7 @@ public class ProductController {
                 .build();
     }
 
-    @ApiOperation(value = "This endpoint get all product")
+    @Operation(description = "This endpoint get all product")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/{language}/products")
     public InternalApiResponse<List<ProductResponse>> getAll(@PathVariable("language") Language language){
