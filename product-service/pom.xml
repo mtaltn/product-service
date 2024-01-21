@@ -36,6 +36,14 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Feign Client -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<version>3.1.6</version>
+		</dependency>
+
+
 		<!-- Swagger -->
 		<dependency>
 			<groupId>io.springfox</groupId>

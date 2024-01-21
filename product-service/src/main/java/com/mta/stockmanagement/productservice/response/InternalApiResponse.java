@@ -14,5 +14,4 @@ public class InternalApiResponse<T> {
     private boolean hasError;
     private List<String> errorMessages;
     private HttpStatus httpStatus;
-
 }
